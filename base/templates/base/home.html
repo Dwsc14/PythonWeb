@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+
+{% block title %}
+
+Đít cọt handmade
+
+{% endblock title %}
+
+{% block content %}
+
+<div>
+    {% for room in rooms %}
+    <h3>
+        {{room.id}} - <a href="/room/{{room.id}}"> {{room.name}} </a>
+    </h3>
+    {% endfor %}
+
+</div>
+
+{% endblock content %}
