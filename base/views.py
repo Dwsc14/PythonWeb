@@ -1,7 +1,6 @@
 import django
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from matplotlib.style import use
 from django.http import HttpResponse
 from .models import Room, Topic
 from .forms import RoomForm
@@ -66,6 +65,7 @@ def room(request, pk):
 @login_required(login_url='login')
 def create_room(request):
     form = RoomForm
+
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
