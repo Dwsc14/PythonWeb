@@ -29,7 +29,8 @@
                 <a href="{% url 'delete_comment' message.id %}">Delete</a>
                 {% endif %}
 
-                <small>@ <a href="{{message.user}}">{{message.user}}</a> {{message.created|timesince}} ago</small>
+                <small>@ <a href="{% url 'user-profile' user.id %}">{{message.user}}</a> {{message.created|timesince}}
+                    ago</small>
                 <p>{{message.body}}</p>
             </div>
             <hr>
@@ -52,7 +53,7 @@
 
         {% for user in practicipants %}
         <div>
-            <p>@ <a href="{{user.username}}">{{user.username}}</a></p>
+            <p>@ <a href="{% url 'user-profile' user.id %}">{{user.username}}</a></p>
         </div>
         {% endfor %}
     </div>

@@ -95,8 +95,10 @@ def room(request, pk):
     return render(request, 'base/room.html', context)
 
 
-def userProfile(request):
-    context = {}
+def userProfile(request, pk):
+    user = User.objects.get(id=pk)
+    rooms = user.room_set.all()
+    context = {'user': user, 'rooms': rooms}
     return render(request, 'base/profile.html', context)
 
 
