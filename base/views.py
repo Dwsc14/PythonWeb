@@ -1,21 +1,23 @@
+from email import message
 import django
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.http import HttpResponse
-from .models import Room, Topic
 from .forms import RoomForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from .models import Room, Topic, Message
 
 # Create your views here.
 
 
 def loginPage(request):
-
+    page = 'login'
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
         password = request.POST.get('password')
 
         try:
@@ -30,7 +32,7 @@ def loginPage(request):
         else:
             messages.error(request, 'Username or password do not right')
 
-    context = {}
+    context = {'page': page}
     return render(request, 'base/login.html', context)
 
 
@@ -39,7 +41,23 @@ def logoutUser(request):
     return redirect('home')
 
 
-@login_required(login_url='login')
+def registerUser(request):
+    form = UserCreationForm
+    context = {'form': form}
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Your username or password were wrong!!')
+    return render(request, 'base/login.html', context)
+
+
 def index(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
@@ -58,7 +76,16 @@ def index(request):
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    content = {'room': room}
+    room_messages = room.message_set.all().order_by('-created')
+    content = {'room': room, 'messages': room_messages}
+    if request.method == 'POST':
+        message = Message.objects.create(
+            user=request.user,
+            room=room,
+            body=request.POST.get('body')
+        )
+        return redirect('room', pk=room.id)
+
     return render(request, 'base/room.html', content)
 
 

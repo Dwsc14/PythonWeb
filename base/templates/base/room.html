@@ -7,10 +7,29 @@
         {{room.name}}
     </h2>
     <h5>{{room.updated}}</h5>
-
-    <div>
-        <h3>{{room.description}}</h3>
-    </div>
+    <p>{{room.description}}</p>
 </div>
+
+<div class="comment-wrapper">
+    <h3>Converstation</h3>
+    <hr>
+    {% for message in messages %}
+    <div>
+        <small>@ <a href="{{message.user}}">{{message.user}}</a> {{message.created|timesince}} ago</small>
+        <p>{{message.body}}</p>
+    </div>
+    <hr>
+    {% endfor %}
+</div>
+
+{% if request.user.is_authenticated %}
+<div class="comment-form">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="text" name="body" placeholder="Write your comment">
+    </form>
+</div>
+{% endif %}
+
 
 {% endblock content %}
