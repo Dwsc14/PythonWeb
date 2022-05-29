@@ -59,7 +59,6 @@ def registerUser(request):
 
 def index(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
-
     rooms = Room.objects.filter(
         Q(topic__topic__contains=q) |
         Q(name__icontains=q) |
@@ -67,25 +66,38 @@ def index(request):
     )
 
     # rooms = Room.objects.all()
-    topics = Topic.objects.all()
 
-    content = {'rooms': rooms, 'topics': topics}
+    topics = Topic.objects.all()
+    room_messages = Message.objects.filter(Q(room__topic__topic__icontains=q))
+    content = {'rooms': rooms, 'topics': topics,
+               'room_messages': room_messages}
+
     return render(request, 'base/home.html', content)
 
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    room_messages = room.message_set.all().order_by('-created')
-    content = {'room': room, 'messages': room_messages}
+    room_messages = room.message_set.all()
+    practicipants = room.practicipants.all()
+
+    context = {'room': room, 'messages': room_messages,
+               'practicipants': practicipants}
+
     if request.method == 'POST':
         message = Message.objects.create(
             user=request.user,
             room=room,
             body=request.POST.get('body')
         )
+        room.practicipants.add(request.user)
         return redirect('room', pk=room.id)
 
-    return render(request, 'base/room.html', content)
+    return render(request, 'base/room.html', context)
+
+
+def userProfile(request):
+    context = {}
+    return render(request, 'base/profile.html', context)
 
 
 @login_required(login_url='login')
@@ -130,3 +142,17 @@ def delete_room(request, pk):
         return redirect('home')
 
     return render(request, 'base/delete.html', {'obj': room})
+
+
+@login_required(login_url='login')
+def delete_comment(request, pk):
+    message = Message.objects.get(id=pk)
+    room = Room.objects.get(name=message.room)
+    if request.user != message.user:
+        return HttpResponse('You are not allowed here')
+
+    if request.method == 'POST':
+        message.delete()
+        return redirect('room', pk=room.id)
+
+    return render(request, 'base/delete.html', {'obj': message})

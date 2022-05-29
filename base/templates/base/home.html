@@ -12,47 +12,24 @@
 <style>
     .home-container {
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 3fr 1fr;
     }
 </style>
 
 
 <div class="home-container">
     <div>
-        <h3>Browse Topic</h3>
-        <form method="GET" action="{% url 'home' %}">
-            <input type="text" name="q" placeholder="Search Room...">
-        </form>
-        <hr>
-
-        <a href="{% url 'home' %}">All</a>
-
-        {% for topic in topics %}
-        <div>
-            <a href="{% url 'home' %}?q={{topic.topic}}">{{topic.topic}}</a>
-        </div>
-        {% endfor %}
+        {% include "base/compoent/topic_compoent.html" %}
     </div>
 
     <div>
         <a href="{% url 'create_room' %}">Create</a>
         <hr>
+        {% include "base/compoent/feed_compoent.html" %}
+    </div>
 
-        {% for room in rooms %}
-        <div>
-            <span>@{{room.host.username}}</span>
-
-            {% if request.user == room.host %}
-            <a href="{% url 'update_room' room.id %}">Edit</a>
-            <a href="{% url 'delete_room' room.id %}">Delete</a>
-            {% endif %}
-
-            <h3><a href="{% url 'room' room.id %}"> {{room.name}} </a></h3>
-            <small>{{room.topic.topic}}</small>
-            <hr>
-        </div>
-        {% endfor %}
-
+    <div>
+        {% include "base/compoent/activity_compoent.html" %}
     </div>
 </div>
 
