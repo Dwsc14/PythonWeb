@@ -8,19 +8,19 @@
         grid-template-columns: 1fr 2fr 1fr;
     }
 </style>
-
+<h1>Name: {{user.username}}</h1>
 <div class="profile-container">
 
     <div>
-        <h1>Name: {{user.username}}</h1>
+        {% include "base/component/topic_component.html" %}
     </div>
 
     <div>
-        {% include "base/compoent/feed_compoent.html" %}
+        {% include "base/component/feed_component.html" %}
     </div>
 
     <div>
-
+        {% include "base/component/activity_component.html" %}
     </div>
 </div>
 {% endblock content %}

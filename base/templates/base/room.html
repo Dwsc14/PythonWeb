@@ -48,10 +48,10 @@
     </div>
 
     <div>
-        <h3>Practicipants</h3>
+        <h3>participants</h3>
         <hr>
 
-        {% for user in practicipants %}
+        {% for user in participants %}
         <div>
             <p>@ <a href="{% url 'user-profile' user.id %}">{{user.username}}</a></p>
         </div>
