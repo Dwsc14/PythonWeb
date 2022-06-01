@@ -1,3 +1,4 @@
+{% load static %}
 <div class="activities">
     <div class="activities__header">
         <h2>Recent Activity</h2>
@@ -5,6 +6,9 @@
     {% for message in room_messages %}
     <div class="activities__box">
         <div class="activities__boxHeader roomListRoom__header">
+            <div class="avatar avatar--small">
+                <img src="{% static 'images/ava.jpg' %}" />
+            </div>
             <a href="{% url 'user-profile' message.user.id %} " class="roomListRoom__author">
                 <p>
                     @{{message.user}}
