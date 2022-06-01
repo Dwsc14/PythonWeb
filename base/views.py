@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .models import Room, Topic, Message
+from django.db.models import Count
+
 
 # Create your views here.
 
@@ -58,6 +60,7 @@ def registerUser(request):
 
 
 def index(request):
+    post = Room.objects.all().annotate(ratings=Count('message'))
     q = request.GET.get('q') if request.GET.get('q') != None else ''
     rooms = Room.objects.filter(
         Q(topic__topic__contains=q) |
@@ -70,7 +73,7 @@ def index(request):
     topics = Topic.objects.all()
     room_messages = Message.objects.filter(Q(room__topic__topic__icontains=q))
     content = {'rooms': rooms, 'topics': topics,
-               'room_messages': room_messages}
+               'room_messages': room_messages, 'post': post}
 
     return render(request, 'base/home.html', content)
 
