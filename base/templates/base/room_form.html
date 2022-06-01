@@ -21,26 +21,25 @@
             <div class="layout__body">
                 <form class="form" action="" method="POST">
                     {% csrf_token %}
-
                     <div class="form__group">
-                        <label for="room_topic">Enter a Topic</label>
-                        <input required type="text" value="{{room.topic.name}}" name="topic" list="topic-list" />
+                        <label for="room_topic">Enter a Topic ( Vui lòng nhập/chọn topic có sẵn )</label>
+                        <input type="text" value="{{room.topic.topic}}" name="topic" list="topic-list" required />
                         <datalist id="topic-list">
                             <select id="room_topic">
                                 {% for topic in topics %}
-                                <option value="{{topic.topic}}">{{topic.topic}}</option>
+                                <option value="{{topic.topic}}"></option>
                                 {% endfor %}
                             </select>
                         </datalist>
                     </div>
 
                     <div class="form__group">
-                        <label for="room_name">Room Name</label>
+                        <label for="room_name">Post Name</label>
                         {{form.name}}
                     </div>
 
                     <div class="form__group">
-                        <label for="room_description">Room Description</label>
+                        <label for="room_description">Post Description</label>
                         {{form.description}}
                     </div>
                     <div class="form__action">

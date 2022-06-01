@@ -1166,3 +1166,25 @@ a {
   color: var(--color-main);
   font-weight: 1.4rem;
 }
+
+.alertLayout {
+  width: 90%;
+  max-width: 30rem;
+  min-height: 5rem;
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  transform: translate(-50%, -46%);
+  background-color: var(--color-dark-medium);
+  border-radius: 1rem;
+  box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.alertLayout h3 {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--color-light);
+  font-weight: 400;
+  padding: 1rem;
+}

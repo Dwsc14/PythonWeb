@@ -1,7 +1,7 @@
 import django
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RoomForm
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -111,15 +111,18 @@ def create_room(request):
     topics = Topic.objects.all()
     if request.method == 'POST':
         topic_name = request.POST.get('topic')
-        topic, created = Topic.objects.get_or_create(topic=topic_name)
+        if topic_name in topics:
+            topic, created = Topic.objects.get_or_create(topic=topic_name)
 
-        Room.objects.create(
-            host=request.user,
-            topic=topic,
-            name=request.POST.get('topic'),
-            description=request.POST.get('description'),
-        )
-        return redirect('home')
+            Room.objects.create(
+                host=request.user,
+                topic=topic,
+                name=request.POST.get('topic'),
+                description=request.POST.get('description'),
+            )
+            return redirect('home')
+        else:
+            pass
 
     context = {'form': form, 'topics': topics}
     return render(request, 'base/room_form.html', context)
