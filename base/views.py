@@ -112,15 +112,15 @@ def userProfile(request, pk):
 def create_room(request):
     form = RoomForm()
     topics = Topic.objects.all()
+
     if request.method == 'POST':
         topic_name = request.POST.get('topic')
-        if topic_name in topics:
+        if Topic.objects.filter(topic=topic_name).exists():
             topic, created = Topic.objects.get_or_create(topic=topic_name)
-
             Room.objects.create(
                 host=request.user,
                 topic=topic,
-                name=request.POST.get('topic'),
+                name=request.POST.get('name'),
                 description=request.POST.get('description'),
             )
             return redirect('home')
