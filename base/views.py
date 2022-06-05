@@ -2,7 +2,7 @@ import django
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import RoomForm
+from .forms import RoomForm, UserForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -173,3 +173,28 @@ def delete_comment(request, pk):
         return redirect('room', pk=room.id)
 
     return render(request, 'base/delete.html', {'obj': message})
+
+
+@login_required(login_url='login')
+def UpdateProfile(request):
+    user = request.user
+    form = UserForm(instance=user)
+
+    return render(request, 'base/update-user.html', {'form': form})
+
+
+def TopicPages(request):
+    topics = Topic.objects.all()
+    return render(request, 'base/topics.html', {'topics': topics})
+
+
+def ActivityPages(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    rooms = Room.objects.filter(
+        Q(topic__topic__contains=q) |
+        Q(name__icontains=q) |
+        Q(description__icontains=q)
+    )
+    room_messages = Message.objects.filter(Q(room__topic__topic__icontains=q))
+
+    return render(request, 'base/activity.html', {'room_messages': room_messages})

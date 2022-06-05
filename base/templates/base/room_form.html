@@ -23,7 +23,7 @@
                     {% csrf_token %}
                     <div class="form__group">
                         <label for="room_topic">Enter a Topic ( Vui lòng nhập/chọn topic có sẵn )</label>
-                        <input type="text" value="{{room.topic.topic}}" name="topic" list="topic-list" required />
+                        <input type="text" name="topic" list="topic-list" required />
                         <datalist id="topic-list">
                             <select id="room_topic">
                                 {% for topic in topics %}
